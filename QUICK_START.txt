@@ -1,36 +1,29 @@
-NoNumber Chat Full Private Pilot Setup
+NoNumber Chat v7 Polished Pilot Quick Start
 
 1. Extract this ZIP.
-2. Open your GitHub repo:
+2. Open GitHub repo:
    nonumberchat / No-number-chat
 
-3. Upload everything from inside this folder to the repo root:
-   - index.html
-   - manifest.json
-   - sw.js
-   - assets/
-   - README.md
-   - QUICK_START.txt
-   - firestore-rules-private-pilot.txt
-
+3. Upload all files from inside this folder to the repo root.
 4. Commit changes.
 
-5. In GitHub Pages, your public link is:
-   https://nonumberchat.github.io/No-number-chat/
+Public:
+https://nonumberchat.github.io/No-number-chat/
 
-6. Creator Admin link is:
-   https://nonumberchat.github.io/No-number-chat/?admin=1
+Creator Admin:
+https://nonumberchat.github.io/No-number-chat/?admin=1
 
-7. Creator Admin PIN:
-   0000
+PIN:
+0000
 
-8. In Firebase, go to:
-   Firestore Database → Rules
+Apply for group:
+https://nonumberchat.github.io/No-number-chat/?apply=1
 
-9. Paste the rules from:
-   firestore-rules-private-pilot.txt
-
-10. Publish.
-
-Note:
-This build intentionally does not use a service worker so old cached versions do not keep haunting the app.
+Workflow:
+1. Person applies for their own group.
+2. Creator Admin approves application.
+3. App creates separate group.
+4. Creator Admin copies Group Admin link and sends it to group admin.
+5. Group Admin opens own dashboard.
+6. Group Admin shows Member QR.
+7. Members scan QR and join that specific group.

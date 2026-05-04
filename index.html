@@ -5,72 +5,417 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#075E54" />
   <title>NoNumber Chat</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" href="assets/icon-192.png">
   <style>
     :root {
-      --green:#075E54; --green2:#128C7E; --light:#25D366; --bg:#efeae2;
-      --paper:#fff; --text:#111b21; --muted:#667781; --line:#e9edef;
-      --out:#d9fdd3; --danger:#fdebea; --dangerText:#a30d05; --warn:#fff8d7;
+      --green:#075E54;
+      --green2:#128C7E;
+      --mint:#25D366;
+      --mintSoft:#E7FCE9;
+      --paper:#ffffff;
+      --cream:#efeae2;
+      --cream2:#f8f4ec;
+      --text:#111b21;
+      --muted:#667781;
+      --line:#e9edef;
+      --danger:#D93025;
+      --dangerSoft:#FDEBEA;
+      --warn:#FFF5D7;
+      --warnText:#6D5200;
+      --bubbleOut:#d9fdd3;
+      --bubbleIn:#ffffff;
+      --shadow:0 14px 34px rgba(17,27,33,.12);
+      --softShadow:0 2px 8px rgba(17,27,33,.06);
+      --radius:22px;
     }
+
     * { box-sizing:border-box; }
-    html,body { margin:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; background:#d8dbd5; color:var(--text); }
-    body:before { content:""; position:fixed; top:0; left:0; right:0; height:130px; background:var(--green); z-index:-1; }
+    html,body {
+      margin:0;
+      min-height:100%;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:#d8dbd5;
+      color:var(--text);
+    }
+    body:before {
+      content:"";
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:138px;
+      background:linear-gradient(135deg,#06473f,var(--green),#0a7468);
+      z-index:-1;
+    }
     button,input,textarea { font:inherit; }
-    button { cursor:pointer; }
-    #app { max-width:540px; min-height:100svh; margin:0 auto; background:var(--bg); box-shadow:0 0 0 1px rgba(0,0,0,.08),0 10px 28px rgba(0,0,0,.13); overflow:hidden; }
-    .bar { min-height:66px; background:var(--green); color:white; display:flex; align-items:center; gap:11px; padding:10px 12px; }
-    .avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--light),#d8ffe5); color:#063b34; display:grid; place-items:center; font-weight:950; flex:0 0 auto; }
+    button { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    #app {
+      max-width:560px;
+      min-height:100svh;
+      margin:0 auto;
+      background:linear-gradient(180deg,var(--cream),var(--cream2));
+      box-shadow:0 0 0 1px rgba(0,0,0,.08),var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .bar {
+      min-height:68px;
+      background:linear-gradient(135deg,#06473f,var(--green));
+      color:white;
+      display:flex;
+      align-items:center;
+      gap:11px;
+      padding:10px 13px;
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+    .avatar {
+      width:43px;
+      height:43px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--mint),#d8ffe5);
+      color:#063b34;
+      display:grid;
+      place-items:center;
+      font-weight:950;
+      flex:0 0 auto;
+      box-shadow:0 6px 18px rgba(0,0,0,.12);
+    }
     .titleWrap { min-width:0; flex:1; }
-    .title { font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .sub { font-size:.78rem; color:rgba(255,255,255,.78); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .back { width:34px; height:40px; border:0; background:transparent; color:white; font-size:1.6rem; }
-    .screen { padding:14px; min-height:calc(100svh - 66px); }
-    .hero,.card { background:white; border-radius:20px; padding:16px; margin:10px 0; box-shadow:0 1px 2px rgba(0,0,0,.06); }
-    .hero h1 { margin:0 0 8px; font-size:1.85rem; line-height:1.05; letter-spacing:-.045em; }
-    .kicker { color:var(--green2); font-size:.76rem; font-weight:950; text-transform:uppercase; letter-spacing:.1em; margin-bottom:7px; }
-    .small { color:var(--muted); font-size:.88rem; line-height:1.45; }
+    .title {
+      font-weight:950;
+      letter-spacing:-.02em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub {
+      font-size:.79rem;
+      color:rgba(255,255,255,.78);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin-top:2px;
+    }
+    .back {
+      width:34px;
+      height:40px;
+      border:0;
+      background:transparent;
+      color:white;
+      font-size:1.7rem;
+      border-radius:50%;
+    }
+    .back:hover { background:rgba(255,255,255,.12); }
+
+    .screen {
+      padding:15px;
+      min-height:calc(100svh - 68px);
+    }
+    .hero,.card {
+      background:rgba(255,255,255,.96);
+      border-radius:var(--radius);
+      padding:17px;
+      margin:11px 0;
+      box-shadow:var(--softShadow);
+      border:1px solid rgba(17,27,33,.045);
+    }
+    .hero {
+      padding:20px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:after {
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(37,211,102,.18),transparent 70%);
+      right:-70px;
+      top:-60px;
+      pointer-events:none;
+    }
+    .hero h1 {
+      margin:0 0 9px;
+      font-size:2.05rem;
+      line-height:1.04;
+      letter-spacing:-.055em;
+      position:relative;
+      z-index:1;
+    }
+    h2,h3 { margin-top:0; letter-spacing:-.025em; }
+    p { line-height:1.45; }
+    .kicker {
+      color:var(--green2);
+      font-size:.74rem;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      position:relative;
+      z-index:1;
+    }
+    .small { color:var(--muted); font-size:.89rem; line-height:1.45; }
+    .micro { color:var(--muted); font-size:.76rem; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
     .row { display:flex; gap:9px; align-items:center; flex-wrap:wrap; }
-    .btn { border:0; border-radius:999px; padding:11px 14px; font-weight:900; min-height:43px; text-align:center; }
-    .primary { background:var(--green2); color:white; }
+    .space { justify-content:space-between; }
+    .stack { display:grid; gap:9px; }
+
+    .btn {
+      border:0;
+      border-radius:999px;
+      padding:11px 14px;
+      font-weight:900;
+      min-height:43px;
+      text-align:center;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      gap:7px;
+      transition:transform .12s ease, filter .12s ease, background .12s ease;
+    }
+    .btn:active { transform:scale(.985); }
+    .primary { background:linear-gradient(135deg,var(--green2),#0d9b8b); color:white; }
+    .soft { background:var(--mintSoft); color:var(--green); }
     .ghost { background:#f0f2f5; color:var(--text); }
-    .soft { background:#e7fce9; color:var(--green); }
-    .danger { background:var(--danger); color:var(--dangerText); }
+    .danger { background:var(--dangerSoft); color:var(--danger); }
     .full { width:100%; }
+
     label { display:block; font-weight:850; margin:13px 0 6px; }
-    input,textarea { width:100%; border:1px solid #d1d7db; border-radius:13px; padding:12px; background:white; outline:none; }
-    textarea { min-height:90px; resize:vertical; }
-    .item { width:100%; border:0; text-align:left; background:white; border-radius:15px; padding:12px; margin:8px 0; display:flex; gap:12px; align-items:center; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+    input,textarea {
+      width:100%;
+      border:1px solid #d1d7db;
+      border-radius:14px;
+      padding:12px;
+      background:white;
+      outline:none;
+      color:var(--text);
+    }
+    textarea { min-height:94px; resize:vertical; }
+    input:focus,textarea:focus {
+      border-color:var(--green2);
+      box-shadow:0 0 0 4px rgba(18,140,126,.12);
+    }
+
+    .notice {
+      border-radius:16px;
+      background:var(--mintSoft);
+      color:var(--green);
+      padding:12px 13px;
+      margin:10px 0;
+      font-size:.89rem;
+      line-height:1.45;
+    }
+    .notice.warn { background:var(--warn); color:var(--warnText); }
+    .notice.danger { background:var(--dangerSoft); color:var(--danger); }
+    .rules { padding-left:18px; color:var(--muted); line-height:1.5; }
+    .linkbox {
+      background:#f0f2f5;
+      border-radius:14px;
+      padding:11px;
+      color:#53656f;
+      font-size:.82rem;
+      word-break:break-all;
+      border:1px solid var(--line);
+    }
+
+    .metricRow {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin:10px 0;
+    }
+    .metric {
+      background:#f7f8fa;
+      border-radius:16px;
+      padding:11px;
+      border:1px solid var(--line);
+    }
+    .metric strong { display:block; font-size:1.2rem; }
+    .metric span { color:var(--muted); font-size:.76rem; }
+
+    .item {
+      width:100%;
+      border:0;
+      text-align:left;
+      background:white;
+      border-radius:17px;
+      padding:13px;
+      margin:8px 0;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      box-shadow:var(--softShadow);
+      border:1px solid rgba(17,27,33,.045);
+    }
     .itemMain { min-width:0; flex:1; }
-    .itemTitle { font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .itemTitle { font-weight:950; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .itemSub { color:var(--muted); font-size:.84rem; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .notice { border-radius:15px; background:#e7fce9; color:var(--green); padding:11px 12px; margin:10px 0; font-size:.88rem; line-height:1.45; }
-    .notice.warn { background:var(--warn); color:#6a5200; }
-    .notice.danger { background:var(--danger); color:var(--dangerText); }
-    .chat { display:flex; flex-direction:column; height:calc(100svh - 66px); background:var(--bg); }
-    .chatNote { margin:8px 10px 0; background:#fff8d7; color:#6a5200; border-radius:12px; padding:7px 10px; text-align:center; font-size:.78rem; }
-    .messages { flex:1; overflow:auto; padding:10px; display:flex; flex-direction:column; gap:7px; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:.72rem;
+      font-weight:950;
+      background:#f0f2f5;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .badge.pending { background:#fff8d7; color:#6a5200; }
+    .badge.approved,.badge.active { background:#e7fce9; color:var(--green); }
+    .badge.rejected,.badge.frozen { background:#fdebea; color:#a30d05; }
+
+    .sectionTitle {
+      margin:19px 2px 8px;
+      font-size:1.08rem;
+      font-weight:950;
+      letter-spacing:-.03em;
+    }
+
+    .chat {
+      display:flex;
+      flex-direction:column;
+      height:calc(100svh - 68px);
+      background:
+        radial-gradient(circle at 16% 12%,rgba(255,255,255,.38),transparent 10%),
+        radial-gradient(circle at 82% 18%,rgba(255,255,255,.30),transparent 8%),
+        var(--cream);
+    }
+    .chatNote {
+      margin:8px 10px 0;
+      background:#fff8d7;
+      color:#6a5200;
+      border-radius:13px;
+      padding:8px 10px;
+      text-align:center;
+      font-size:.78rem;
+    }
+    .messages {
+      flex:1;
+      overflow:auto;
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
     .msg { display:flex; width:100%; align-items:flex-end; gap:7px; }
     .msg.mine { justify-content:flex-end; }
-    .bubble { max-width:82%; min-width:44px; background:white; border-radius:10px; padding:7px 9px 5px; box-shadow:0 1px 1px rgba(0,0,0,.13); }
-    .mine .bubble { background:var(--out); }
-    .system .bubble { margin:4px auto; max-width:94%; background:#e2f3fb; color:#53656f; text-align:center; box-shadow:none; font-size:.8rem; }
-    .shout .bubble { background:#fff6d9; }
+    .bubble {
+      max-width:82%;
+      min-width:44px;
+      background:var(--bubbleIn);
+      border-radius:13px 13px 13px 5px;
+      padding:8px 10px 6px;
+      box-shadow:0 1px 1px rgba(0,0,0,.12);
+    }
+    .mine .bubble {
+      background:var(--bubbleOut);
+      border-radius:13px 13px 5px 13px;
+    }
+    .system .bubble {
+      margin:4px auto;
+      max-width:94%;
+      background:#e2f3fb;
+      color:#53656f;
+      text-align:center;
+      box-shadow:none;
+      font-size:.8rem;
+      border-radius:13px;
+    }
+    .shout .bubble { background:#fff6d9; border:1px solid rgba(109,82,0,.08); }
     .msgName { color:var(--green2); font-weight:950; font-size:.77rem; margin-bottom:2px; }
     .msgText { white-space:pre-wrap; overflow-wrap:break-word; word-break:normal; line-height:1.35; }
-    .msgTime { text-align:right; color:var(--muted); font-size:.68rem; margin-top:2px; }
-    .composer { background:#f0f2f5; padding:8px; display:flex; gap:7px; align-items:flex-end; }
-    .composer textarea { border:0; border-radius:22px; min-height:44px; max-height:110px; padding:12px 14px; }
-    .round,.shout { width:44px; height:44px; border-radius:50%; border:0; flex:0 0 auto; }
+    .msgTime { text-align:right; color:var(--muted); font-size:.68rem; margin-top:3px; }
+    .deleteMsg { margin-top:7px; padding:5px 9px; min-height:auto; font-size:.72rem; }
+
+    .composer {
+      background:#f0f2f5;
+      padding:8px;
+      display:flex;
+      gap:7px;
+      align-items:flex-end;
+      border-top:1px solid rgba(17,27,33,.06);
+    }
+    .composer textarea {
+      border:0;
+      border-radius:23px;
+      min-height:45px;
+      max-height:110px;
+      padding:12px 14px;
+      box-shadow:0 1px 1px rgba(0,0,0,.06);
+    }
+    .round,.shout {
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      border:0;
+      flex:0 0 auto;
+      box-shadow:0 1px 2px rgba(0,0,0,.08);
+    }
     .round { background:var(--green2); color:white; font-weight:950; }
     .shout { background:white; color:var(--green); }
-    .modalBack { position:fixed; inset:0; background:rgba(17,27,33,.55); display:grid; place-items:end center; z-index:80; padding:12px; }
-    .modal { width:min(540px,100%); max-height:88svh; overflow:auto; background:white; border-radius:24px 24px 18px 18px; padding:16px; }
-    .toast { position:fixed; left:50%; bottom:16px; transform:translateX(-50%); background:#111b21; color:white; border-radius:999px; padding:11px 14px; z-index:120; font-weight:850; text-align:center; }
-    .qrbox { background:white; border-radius:22px; padding:14px; display:grid; place-items:center; margin:12px auto; max-width:275px; }
+
+    .modalBack {
+      position:fixed;
+      inset:0;
+      background:rgba(17,27,33,.55);
+      display:grid;
+      place-items:end center;
+      z-index:80;
+      padding:12px;
+    }
+    .modal {
+      width:min(560px,100%);
+      max-height:88svh;
+      overflow:auto;
+      background:white;
+      border-radius:26px 26px 18px 18px;
+      padding:17px;
+      box-shadow:var(--shadow);
+    }
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:16px;
+      transform:translateX(-50%);
+      background:#111b21;
+      color:white;
+      border-radius:999px;
+      padding:11px 14px;
+      z-index:120;
+      font-weight:850;
+      text-align:center;
+      max-width:calc(100% - 28px);
+      box-shadow:var(--shadow);
+    }
+    .qrbox {
+      background:white;
+      border-radius:24px;
+      padding:15px;
+      display:grid;
+      place-items:center;
+      margin:12px auto;
+      max-width:282px;
+      border:1px solid var(--line);
+      box-shadow:var(--softShadow);
+    }
     .qrbox img { width:235px; height:235px; }
-    .linkbox { background:#f0f2f5; border-radius:13px; padding:10px; color:#53656f; font-size:.82rem; word-break:break-all; }
-    .rules { padding-left:18px; color:var(--muted); line-height:1.5; }
-    @media(max-width:540px) { #app { max-width:100%; box-shadow:none; } body:before { display:none; } }
+
+    @media(max-width:540px) {
+      #app { max-width:100%; box-shadow:none; }
+      body:before { display:none; }
+      .hero h1 { font-size:1.75rem; }
+      .metricRow { grid-template-columns:repeat(3,1fr); }
+      .grid { grid-template-columns:1fr; }
+      .bubble { max-width:86%; }
+    }
   </style>
 </head>
 <body>
@@ -89,7 +434,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFirestore, collection, doc, addDoc, getDoc, updateDoc,
+  getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc,
   onSnapshot, query, orderBy, limit, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -106,14 +451,17 @@ const params = new URLSearchParams(location.search);
 
 let firebaseApp, auth, db, uid;
 let app = document.getElementById("app");
-let route = params.get("admin") === "1" ? "creatorLogin" : params.has("join") ? "join" : "public";
+let route = params.get("admin") === "1" ? "creatorLogin" : params.has("manage") ? "groupAdmin" : params.has("join") ? "join" : params.has("apply") ? "apply" : "public";
+let manageToken = params.get("manage") || "";
 let groups = [];
+let applications = [];
 let currentGroupId = localStorage.getItem("nn_group") || "";
 let joinGroupId = params.get("join") || "";
 let joinCode = params.get("code") || "";
 let nickname = localStorage.getItem("nn_nick") || "";
 let creator = localStorage.getItem("nn_creator") === "yes";
 let unsubGroups = null;
+let unsubApps = null;
 let unsubMessages = null;
 let messages = [];
 
@@ -128,6 +476,7 @@ async function boot(){
       if (user) {
         uid = user.uid;
         listenGroups();
+        listenApplications();
         render();
       }
     });
@@ -140,10 +489,10 @@ async function boot(){
 function listenGroups(){
   if (unsubGroups) unsubGroups();
   unsubGroups = onSnapshot(
-    query(collection(db, "groups"), orderBy("updatedAt", "desc"), limit(50)),
+    query(collection(db, "groups"), orderBy("updatedAt", "desc"), limit(100)),
     snap => {
       groups = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      if (route === "creator" || route === "public") render();
+      if (["creator","public","groupAdmin"].includes(route)) render();
     },
     err => {
       app.innerHTML = bar("Permission Error", "Groups") + `<main class="screen"><div class="notice danger">${escapeHtml(err.message)}</div></main>`;
@@ -151,35 +500,84 @@ function listenGroups(){
   );
 }
 
+function listenApplications(){
+  if (unsubApps) unsubApps();
+  unsubApps = onSnapshot(
+    query(collection(db, "applications"), orderBy("createdAt", "desc"), limit(100)),
+    snap => {
+      applications = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      if (route === "creator") render();
+    },
+    () => {}
+  );
+}
+
 function render(){
   if (!uid) return app.innerHTML = `<div class="screen"><div class="hero"><h1>Connecting…</h1></div></div>`;
   if (route === "creatorLogin") return creatorLogin();
   if (route === "creator") return creatorDashboard();
+  if (route === "groupAdmin") return groupAdminDashboard();
   if (route === "chat") return chatScreen();
   if (route === "invite") return inviteScreen();
   if (route === "join") return joinScreen();
+  if (route === "apply") return applyScreen();
   return publicHome();
 }
 
 function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
   app.innerHTML = `
-    ${bar("NoNumber Chat", "Private pilot · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot v7 · no phone numbers")}
     <main class="screen">
       <section class="hero">
         <div class="kicker">Private pilot</div>
-        <h1>Join by QR invite.</h1>
-        <p>This is a phone-number-free group chat pilot. Members join from a group QR code or invite link.</p>
-        <div class="notice warn">Ask the group admin for a QR code or invite link.</div>
+        <h1>Private group chat without sharing phone numbers.</h1>
+        <p>Members join with a QR invite, choose a first name or nickname, and chat inside their own group room.</p>
       </section>
+
       <section class="card">
-        <h2>How it works</h2>
-        <ol class="rules">
-          <li>Scan the group QR code.</li>
-          <li>Choose a first name or nickname.</li>
-          <li>Accept the rules.</li>
-          <li>Chat without sharing phone numbers.</li>
-        </ol>
+        <h2>Join a group</h2>
+        <p class="small">Ask your group admin for their QR code or invite link. Each group has its own separate room.</p>
+        <div class="notice warn">Skipton and Keighley groups stay separate. One QR only joins one group.</div>
+      </section>
+
+      <section class="card">
+        <h2>Want your own group?</h2>
+        <p class="small">Apply for a separate group space with its own admin area and member QR code.</p>
+        <button class="btn soft full applyLink">Apply for a group</button>
+      </section>
+    </main>
+  `;
+}
+
+function applyScreen(){
+  app.innerHTML = `
+    ${bar("Group Sign-up", "Apply for a separate group", "public")}
+    <main class="screen">
+      <section class="hero">
+        <div class="kicker">Group application</div>
+        <h1>Apply for your own group.</h1>
+        <p>Each approved group gets its own admin link, own chat room and own QR code.</p>
+      </section>
+
+      <section class="card">
+        <label>Your name</label>
+        <input id="applicantName" placeholder="Your name">
+
+        <label>Email/contact</label>
+        <input id="applicantContact" placeholder="Email or contact name">
+
+        <label>Group name / area</label>
+        <input id="applicationGroupName" placeholder="Example: Skipton Open Chat">
+
+        <label>What is the group for?</label>
+        <textarea id="applicationPurpose" placeholder="Example: friendly local chat, walking group, club group, community group..."></textarea>
+
+        <label>Why do you want access?</label>
+        <textarea id="applicationReason" placeholder="Tell Creator Admin why this group should be approved."></textarea>
+
+        <div class="notice warn">Creator Admin approves or rejects applications and can freeze or remove access if needed.</div>
+        <button class="btn primary full submitApplication">Submit group application</button>
       </section>
     </main>
   `;
@@ -196,6 +594,10 @@ async function joinScreen(){
     app.innerHTML = bar("Invite expired", "NoNumber Chat") + `<main class="screen"><div class="notice danger">This QR code has expired or been reset.</div></main>`;
     return;
   }
+  if (g.status === "frozen") {
+    app.innerHTML = bar(g.name, "Group frozen") + `<main class="screen"><div class="notice danger">This group is currently frozen by Creator Admin.</div></main>`;
+    return;
+  }
   app.innerHTML = `
     ${bar(g.name, "Join by nickname only")}
     <main class="screen">
@@ -204,9 +606,11 @@ async function joinScreen(){
         <h1>No number needed.</h1>
         <p>Choose a first name or nickname, accept the rules, and join the chat.</p>
       </section>
+
       <section class="card">
         <label>First name or nickname</label>
         <input id="joinNick" maxlength="32" value="${escapeHtml(nickname)}" placeholder="Craig">
+
         <div class="notice">
           <strong>Group rules</strong>
           <ul class="rules">
@@ -216,7 +620,8 @@ async function joinScreen(){
             <li>Admins can remove messages or freeze the group.</li>
           </ul>
         </div>
-        <button class="btn primary full joinGroupBtn">I agree and join</button>
+
+        <button class="btn primary full joinGroupBtn">Agree and join</button>
       </section>
     </main>
   `;
@@ -226,8 +631,14 @@ function creatorLogin(){
   app.innerHTML = `
     ${bar("Creator Admin", "Private admin link", "public")}
     <main class="screen">
+      <section class="hero">
+        <div class="kicker">Creator control</div>
+        <h1>Master dashboard.</h1>
+        <p>Approve groups, create QR codes, freeze rooms, delete messages and control the whole app.</p>
+      </section>
+
       <section class="card">
-        <h2>Creator sign in</h2>
+        <h2>Sign in</h2>
         <p class="small">Demo PIN: <strong>0000</strong></p>
         <label>PIN</label>
         <input id="pin" type="password" inputmode="numeric" />
@@ -239,28 +650,123 @@ function creatorLogin(){
 
 function creatorDashboard(){
   if (!creator) { route = "creatorLogin"; return creatorLogin(); }
-  const cards = groups.map(g => `
+
+  const pendingCount = applications.filter(a => (a.status || "pending") === "pending").length;
+  const frozenCount = groups.filter(g => g.status === "frozen").length;
+
+  const appCards = applications.map(a => `
     <div class="card">
-      <h3>${escapeHtml(g.name)}</h3>
-      <p class="small">${escapeHtml(g.description || "")}</p>
+      <div class="row space">
+        <div>
+          <h3>${escapeHtml(a.groupName || "Group application")}</h3>
+          <p class="small">${escapeHtml(a.name || "")} · ${escapeHtml(a.contact || "No contact")}</p>
+        </div>
+        <span class="badge ${escapeHtml(a.status || "pending")}">${escapeHtml(a.status || "pending")}</span>
+      </div>
+      <p class="small"><strong>Purpose:</strong> ${escapeHtml(a.purpose || "")}</p>
+      <p class="small"><strong>Reason:</strong> ${escapeHtml(a.reason || "")}</p>
+      <div class="row">
+        <button class="btn soft approveApplication" data-id="${escapeHtml(a.id)}">Approve + create group</button>
+        <button class="btn danger rejectApplication" data-id="${escapeHtml(a.id)}">Reject</button>
+      </div>
+    </div>
+  `).join("") || `<div class="card small">No group applications yet.</div>`;
+
+  const groupCards = groups.map(g => `
+    <div class="card">
+      <div class="row space">
+        <div>
+          <h3>${escapeHtml(g.name)}</h3>
+          <p class="small">${escapeHtml(g.description || "")}</p>
+        </div>
+        <span class="badge ${escapeHtml(g.status || "active")}">${escapeHtml(g.status || "active")}</span>
+      </div>
       <div class="row">
         <button class="btn ghost openGroup" data-id="${escapeHtml(g.id)}">Open chat</button>
-        <button class="btn ghost inviteGroup" data-id="${escapeHtml(g.id)}">QR</button>
+        <button class="btn ghost inviteGroup" data-id="${escapeHtml(g.id)}">Member QR</button>
+        <button class="btn soft adminLinkGroup" data-id="${escapeHtml(g.id)}">Group Admin link</button>
+        <button class="btn ghost clearChat" data-id="${escapeHtml(g.id)}">Clear chat</button>
         <button class="btn danger freezeGroup" data-id="${escapeHtml(g.id)}" data-status="${escapeHtml(g.status || "active")}">${g.status === "frozen" ? "Unfreeze" : "Freeze"}</button>
+        <button class="btn danger deleteGroup" data-id="${escapeHtml(g.id)}">Delete group</button>
       </div>
     </div>
   `).join("") || `<div class="card small">No groups yet. Create one now.</div>`;
 
   app.innerHTML = `
-    ${bar("Creator Dashboard", "Create groups · invite · freeze", "public")}
+    ${bar("Creator Dashboard", "Whole-app control", "public")}
     <main class="screen">
+      <section class="hero">
+        <div class="kicker">Master control</div>
+        <h1>Creator Admin</h1>
+        <p>You control the whole app. Group Admins only control their own group.</p>
+
+        <div class="metricRow">
+          <div class="metric"><strong>${groups.length}</strong><span>groups</span></div>
+          <div class="metric"><strong>${pendingCount}</strong><span>pending</span></div>
+          <div class="metric"><strong>${frozenCount}</strong><span>frozen</span></div>
+        </div>
+      </section>
+
       <section class="card">
         <div class="grid">
-          <button class="btn primary createGroup">Create group</button>
+          <button class="btn primary createGroup">Create group manually</button>
           <button class="btn ghost logoutCreator">Log out</button>
         </div>
       </section>
-      ${cards}
+
+      <section class="card">
+        <h2>Group application link</h2>
+        <p class="small">Send this to someone who wants their own separate group.</p>
+        <div class="linkbox" id="applyLinkBox">${escapeHtml(makeApplyLink())}</div>
+        <button class="btn soft full copyApplyLink" style="margin-top:10px">Copy application link</button>
+      </section>
+
+      <h2 class="sectionTitle">Group applications</h2>
+      ${appCards}
+
+      <h2 class="sectionTitle">Groups</h2>
+      ${groupCards}
+    </main>
+  `;
+}
+
+function groupAdminDashboard(){
+  const g = groups.find(x => x.adminToken === manageToken);
+  if (!g) {
+    app.innerHTML = `${bar("Group Admin", "Group not found", "public")}
+      <main class="screen">
+        <section class="card">
+          <h2>Group Admin link not found</h2>
+          <p class="small">This admin link may be wrong, expired, or the group may have been deleted by Creator Admin.</p>
+        </section>
+      </main>`;
+    return;
+  }
+  currentGroupId = g.id;
+  localStorage.setItem("nn_group", currentGroupId);
+
+  app.innerHTML = `
+    ${bar("Group Admin", g.name, "public")}
+    <main class="screen">
+      <section class="hero">
+        <div class="kicker">Group admin area</div>
+        <h1>${escapeHtml(g.name)}</h1>
+        <p>Control this group only. Creator Admin still controls the whole app.</p>
+      </section>
+
+      <section class="card">
+        <h2>Your group controls</h2>
+        <div class="grid">
+          <button class="btn primary openGroup" data-id="${escapeHtml(g.id)}">Open chat</button>
+          <button class="btn soft inviteGroup" data-id="${escapeHtml(g.id)}">Member QR</button>
+          <button class="btn ghost clearChat" data-id="${escapeHtml(g.id)}">Clear chat</button>
+          <button class="btn ghost copyGroupAdminLink" data-id="${escapeHtml(g.id)}">Copy admin link</button>
+        </div>
+      </section>
+
+      <section class="notice warn">
+        Creator Admin can freeze, delete or take control of this group at any time.
+      </section>
     </main>
   `;
 }
@@ -284,7 +790,7 @@ function chatScreen(){
 
 function paintChat(g){
   app.innerHTML = `
-    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", "public", creator ? `<button class="btn ghost inviteCurrent">QR</button>` : "")}
+    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", creator ? "creator" : manageToken ? "groupAdmin" : "public", canAdminGroup(g.id) ? `<button class="btn ghost inviteCurrent">QR</button>` : "")}
     <main class="chat">
       <div class="chatNote">No phone numbers · keep it light · stay in the group</div>
       ${g.status === "frozen" ? `<div class="notice danger" style="margin:10px">This group is frozen.</div>` : ""}
@@ -309,15 +815,24 @@ function inviteScreen(){
   if (!g) { route = "creator"; return render(); }
   const link = makeJoinLink(g);
   const qr = "https://api.qrserver.com/v1/create-qr-code/?size=470x470&margin=12&data=" + encodeURIComponent(link);
+
   app.innerHTML = `
-    ${bar("QR Invite", g.name, "creator")}
+    ${bar("Member QR Invite", g.name, creator ? "creator" : manageToken ? "groupAdmin" : "public")}
     <main class="screen">
+      <section class="hero">
+        <div class="kicker">Member invite</div>
+        <h1>${escapeHtml(g.name)}</h1>
+        <p>This QR only joins people to this group.</p>
+      </section>
+
       <section class="card">
-        <div class="kicker">Scan to join</div>
-        <h2>${escapeHtml(g.name)}</h2>
-        <div class="qrbox"><img src="${qr}" /></div>
+        <div class="qrbox"><img src="${qr}" alt="QR invite" /></div>
         <div class="linkbox" id="inviteLink">${escapeHtml(link)}</div>
-        <button class="btn primary full copyInvite" style="margin-top:10px">Copy invite</button>
+        <button class="btn primary full copyInvite" style="margin-top:10px">Copy member invite</button>
+      </section>
+
+      <section class="notice warn">
+        Members who scan this QR choose a nickname and join this group only.
       </section>
     </main>
   `;
@@ -326,6 +841,13 @@ function inviteScreen(){
 document.addEventListener("click", async e => {
   const back = e.target.closest(".back");
   if (back) { route = back.dataset.route; render(); return; }
+
+  if (e.target.closest(".applyLink")) { route = "apply"; render(); return; }
+
+  if (e.target.closest(".submitApplication")) {
+    await submitApplication();
+    return;
+  }
 
   if (e.target.closest(".openCreator")) {
     const pin = document.getElementById("pin").value.trim();
@@ -347,6 +869,19 @@ document.addEventListener("click", async e => {
 
   if (e.target.closest(".createGroup")) { groupModal(); return; }
 
+  const approve = e.target.closest(".approveApplication");
+  if (approve) {
+    await approveApplication(approve.dataset.id);
+    return;
+  }
+
+  const reject = e.target.closest(".rejectApplication");
+  if (reject) {
+    await updateDoc(doc(db, "applications", reject.dataset.id), { status:"rejected", decidedAt:serverTimestamp() });
+    toast("Application rejected");
+    return;
+  }
+
   const open = e.target.closest(".openGroup");
   if (open) {
     currentGroupId = open.dataset.id;
@@ -363,6 +898,24 @@ document.addEventListener("click", async e => {
     localStorage.setItem("nn_group", currentGroupId);
     route = "invite";
     render();
+    return;
+  }
+
+  const adminLink = e.target.closest(".adminLinkGroup");
+  if (adminLink) {
+    const g = groups.find(x => x.id === adminLink.dataset.id);
+    if (!g) return toast("Group not found");
+    await navigator.clipboard.writeText(makeManageLink(g)).catch(()=>{});
+    toast("Group Admin link copied");
+    return;
+  }
+
+  const copyAdmin = e.target.closest(".copyGroupAdminLink");
+  if (copyAdmin) {
+    const g = groups.find(x => x.id === copyAdmin.dataset.id);
+    if (!g) return toast("Group not found");
+    await navigator.clipboard.writeText(makeManageLink(g)).catch(()=>{});
+    toast("Group Admin link copied");
     return;
   }
 
@@ -397,10 +950,43 @@ document.addEventListener("click", async e => {
     return;
   }
 
+  const delMsg = e.target.closest(".deleteMsg");
+  if (delMsg) {
+    if (!canAdminGroup()) return toast("Admin only");
+    if (!confirm("Delete this message?")) return;
+    await deleteDoc(doc(db, "groups", currentGroupId, "messages", delMsg.dataset.id));
+    toast("Message deleted");
+    return;
+  }
+
+  const clear = e.target.closest(".clearChat");
+  if (clear) {
+    if (!canAdminGroup(clear.dataset.id)) return toast("Admin only");
+    if (!confirm("Clear all messages in this group?")) return;
+    await clearGroupMessages(clear.dataset.id);
+    toast("Chat cleared");
+    return;
+  }
+
+  const delGroup = e.target.closest(".deleteGroup");
+  if (delGroup) {
+    if (!creator) return toast("Creator Admin only");
+    if (!confirm("Delete this whole group and its messages?")) return;
+    await deleteWholeGroup(delGroup.dataset.id);
+    toast("Group deleted");
+    return;
+  }
+
   const copy = e.target.closest(".copyInvite");
   if (copy) {
     await navigator.clipboard.writeText(document.getElementById("inviteLink").textContent).catch(()=>{});
     toast("Invite copied");
+    return;
+  }
+
+  if (e.target.closest(".copyApplyLink")) {
+    await navigator.clipboard.writeText(makeApplyLink()).catch(()=>{});
+    toast("Application link copied");
     return;
   }
 });
@@ -415,11 +1001,80 @@ document.addEventListener("submit", async e => {
   }
 });
 
+function currentGroup(){
+  return groups.find(x => x.id === currentGroupId);
+}
+
+function canAdminGroup(groupId = currentGroupId){
+  const g = groups.find(x => x.id === groupId);
+  return creator || (!!manageToken && !!g && g.adminToken === manageToken);
+}
+
+async function submitApplication(){
+  const name = value("applicantName");
+  const contact = value("applicantContact");
+  const groupName = value("applicationGroupName");
+  const purpose = value("applicationPurpose");
+  const reason = value("applicationReason");
+
+  if (!name || !groupName || !purpose || !reason) return toast("Please fill in name, group name, purpose and reason");
+  if (hasPhone(name + " " + contact + " " + groupName + " " + purpose + " " + reason)) return toast("Please don't include phone numbers");
+
+  await addDoc(collection(db, "applications"), {
+    name, contact, groupName, purpose, reason, status:"pending", applicantUid:uid, createdAt:serverTimestamp()
+  });
+
+  toast("Application sent");
+  route = "public";
+  render();
+}
+
+async function approveApplication(appId){
+  const appSnap = await getDoc(doc(db, "applications", appId));
+  if (!appSnap.exists()) return toast("Application not found");
+  const a = appSnap.data();
+
+  const groupRef = await addDoc(collection(db, "groups"), {
+    name:a.groupName,
+    description:a.purpose || "",
+    status:"active",
+    inviteCode:code(),
+    adminToken:code(),
+    applicationId:appId,
+    applicantName:a.name || "",
+    applicantContact:a.contact || "",
+    createdBy:uid,
+    createdAt:serverTimestamp(),
+    updatedAt:serverTimestamp()
+  });
+
+  await addDoc(collection(db, "groups", groupRef.id, "messages"), {
+    uid:"system",
+    nickname:"Admin",
+    type:"system",
+    text:"Group approved and created. Members join by QR using a nickname only.",
+    createdAt:serverTimestamp()
+  });
+
+  const groupSnap = await getDoc(groupRef);
+  await updateDoc(doc(db, "applications", appId), {
+    status:"approved",
+    groupId:groupRef.id,
+    adminToken:groupSnap.data().adminToken,
+    approvedAt:serverTimestamp()
+  });
+
+  currentGroupId = groupRef.id;
+  localStorage.setItem("nn_group", currentGroupId);
+  route = "invite";
+  render();
+}
+
 function groupModal(){
   modal(`
-    <h2>Create group</h2>
-    <label>Group name</label><input id="gName" placeholder="Test Chat">
-    <label>Description</label><textarea id="gDesc" placeholder="First live test group"></textarea>
+    <h2>Create group manually</h2>
+    <label>Group name</label><input id="gName" placeholder="Skipton Open Chat">
+    <label>Description</label><textarea id="gDesc" placeholder="Friendly local group chat"></textarea>
     <button class="btn primary full saveGroup" style="margin-top:12px">Create group</button>
     <button class="btn ghost full closeModal" style="margin-top:8px">Cancel</button>
   `);
@@ -428,18 +1083,21 @@ function groupModal(){
     const name = document.getElementById("gName").value.trim();
     const description = document.getElementById("gDesc").value.trim();
     if (!name) return toast("Add a group name");
+
     const ref = await addDoc(collection(db, "groups"), {
-      name, description, status:"active", inviteCode:code(), createdBy:uid,
+      name, description, status:"active", inviteCode:code(), adminToken:code(), createdBy:uid,
       createdAt:serverTimestamp(), updatedAt:serverTimestamp()
     });
+
     await addDoc(collection(db, "groups", ref.id, "messages"), {
       uid:"system", nickname:"Admin", type:"system", text:"Group created. Members join by QR using a nickname only.",
       createdAt:serverTimestamp()
     });
+
     closeModal();
     currentGroupId = ref.id;
     localStorage.setItem("nn_group", currentGroupId);
-    route = "chat";
+    route = "invite";
     render();
   };
 }
@@ -447,7 +1105,7 @@ function groupModal(){
 function nickModal(done){
   modal(`
     <h2>Choose nickname</h2>
-    <p class="small">No phone number needed.</p>
+    <p class="small">No phone number needed. This is what people will see in chat.</p>
     <label>First name or nickname</label><input id="nick" maxlength="32" value="${escapeHtml(nickname)}" placeholder="Craig">
     <button class="btn primary full saveNick" style="margin-top:12px">Save</button>
   `);
@@ -465,10 +1123,47 @@ function nickModal(done){
 async function sendMessage(text, type){
   if (!nickname) return nickModal(() => sendMessage(text, type));
   if (hasPhone(text)) return toast("Phone numbers are blocked");
+
+  const g = currentGroup();
+  if (g && g.status === "frozen") return toast("This group is frozen");
+
   await addDoc(collection(db, "groups", currentGroupId, "messages"), {
     uid, nickname, type, text, createdAt:serverTimestamp()
   });
+
   await updateDoc(doc(db, "groups", currentGroupId), { updatedAt:serverTimestamp(), lastMessage:text.slice(0,80) });
+}
+
+async function clearGroupMessages(groupId){
+  const snap = await getDocs(collection(db, "groups", groupId, "messages"));
+  await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+
+  await addDoc(collection(db, "groups", groupId, "messages"), {
+    uid:"system",
+    nickname:"Admin",
+    type:"system",
+    text:"Chat cleared by admin.",
+    createdAt:serverTimestamp()
+  });
+
+  await updateDoc(doc(db, "groups", groupId), {
+    updatedAt:serverTimestamp(),
+    lastMessage:"Chat cleared by admin"
+  });
+}
+
+async function deleteWholeGroup(groupId){
+  const snap = await getDocs(collection(db, "groups", groupId, "messages"));
+  await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+  await deleteDoc(doc(db, "groups", groupId));
+
+  if (currentGroupId === groupId) {
+    currentGroupId = "";
+    localStorage.removeItem("nn_group");
+  }
+
+  route = "creator";
+  render();
 }
 
 function msg(m){
@@ -479,6 +1174,7 @@ function msg(m){
         ${m.type !== "system" ? `<div class="msgName">${m.type === "shout" ? "👋 " : ""}${escapeHtml(m.nickname || "Someone")}</div>` : ""}
         <div class="msgText">${escapeHtml(m.text || "")}</div>
         <div class="msgTime">${m.createdAt?.toDate ? m.createdAt.toDate().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) : ""} ${mine ? "✓" : ""}</div>
+        ${canAdminGroup() && m.type !== "system" ? `<button class="btn danger deleteMsg" data-id="${escapeHtml(m.id)}">Delete message</button>` : ""}
       </div>
     </article>
   `;
@@ -491,7 +1187,10 @@ function modal(content){ const m = document.createElement("div"); m.className = 
 function closeModal(){ document.getElementById("modal")?.remove(); }
 function toast(text){ document.getElementById("toast")?.remove(); const t = document.createElement("div"); t.className = "toast"; t.id = "toast"; t.textContent = text; document.body.appendChild(t); setTimeout(()=>t.remove(),2200); }
 function makeJoinLink(g){ const u = new URL(location.href); u.search = ""; u.searchParams.set("join", g.id); u.searchParams.set("code", g.inviteCode || ""); return u.toString(); }
+function makeApplyLink(){ const u = new URL(location.href); u.search = ""; u.searchParams.set("apply", "1"); return u.toString(); }
+function makeManageLink(g){ const u = new URL(location.href); u.search = ""; u.searchParams.set("manage", g.adminToken || ""); return u.toString(); }
 function code(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+function value(id){ return (document.getElementById(id)?.value || "").trim(); }
 function initials(s=""){ return (String(s).trim().split(/\s+/).slice(0,2).map(x=>x[0]).join("") || "?").toUpperCase(); }
 function escapeHtml(s=""){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
 function hasPhone(s){ return /(?:\+?\d[\s().-]*){9,}/.test(String(s)); }

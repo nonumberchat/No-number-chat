@@ -1,79 +1,48 @@
-# NoNumber Chat - Private Pilot
+# NoNumber Chat - v7 Polished Pilot
 
-A private pilot for a phone-number-free group chat tool.
+This is the polished private-pilot version.
 
-## Current working structure
+## What it does
 
-### Public/member link
+- Public page hides admin controls
+- Group application/sign-up page
+- Creator Admin dashboard
+- Group Admin dashboard for each group
+- Each approved group has its own admin link
+- Each approved group has its own member QR code
+- Members join with first name/nickname only
+- No phone number fields
+- Creator Admin can freeze/delete any group
+- Creator Admin can delete messages in any group
+- Group Admin can control their own group only
+- Polished WhatsApp-inspired UI
 
+## Links
+
+Public page:
 https://nonumberchat.github.io/No-number-chat/
 
-This page does not show the admin buttons. It tells people this is a private pilot and asks them to join by QR/invite link.
-
-### Creator Admin link
-
+Creator Admin:
 https://nonumberchat.github.io/No-number-chat/?admin=1
 
-Creator Admin PIN for this pilot:
-
+PIN:
 0000
 
-### Member join links
+Group Application:
+https://nonumberchat.github.io/No-number-chat/?apply=1
 
-Creator Admin creates a group and uses the QR button. Members scan the QR code or open the invite link.
+Group Admin:
+Creator Admin copies each Group Admin link from the dashboard.
 
-They then:
+Member QR:
+Creator Admin or Group Admin opens Member QR for that specific group.
 
-1. Choose a first name or nickname.
-2. Agree to the rules.
-3. Join the group chat.
-4. Chat without sharing phone numbers.
+## Upload
 
-## What is included
+Upload all files to GitHub repo root and commit changes.
 
-- index.html
-- manifest.json
-- sw.js
-- assets/icon-192.png
-- assets/icon-512.png
-- firestore-rules-private-pilot.txt
-- README.md
-- QUICK_START.txt
+## Firebase
 
-## Important Firebase note
+Use firestore-rules-private-pilot.txt for the current pilot.
 
-The included Firestore rules are still pilot rules. They are better than the fully open test rules because they require anonymous Firebase sign-in:
-
-allow read, write: if request.auth != null;
-
-Before any public launch, Creator Admin and Group Admin permissions should be properly locked down server-side.
-
-## GitHub upload
-
-Upload all these files to the root of the GitHub repo:
-
-- index.html
-- manifest.json
-- sw.js
-- assets folder
-- README.md
-- QUICK_START.txt
-- firestore-rules-private-pilot.txt
-
-Then commit changes.
-
-## GitHub Pages
-
-Settings → Pages → Deploy from branch → main → /root
-
-## Firebase rules
-
-Open Firebase:
-
-Firestore Database → Rules
-
-Paste the contents of:
-
-firestore-rules-private-pilot.txt
-
-Then Publish.
+These rules still need tightening before public launch.
