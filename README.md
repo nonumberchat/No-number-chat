@@ -1,28 +1,18 @@
-# NoNumber Chat - v10 Save to Home Screen Helper
+# NoNumber Chat - v12 Wave Button Fix
 
-This version adds an in-app "Save this group" option.
+This version fixes the wave/shout-out button bug.
 
-## Why
+## Fixed
 
-Phones, especially iPhones, do not let a web app force Add to Home Screen automatically.
+The wave button and shout-out message were sharing the same CSS class name.
 
-So this version adds:
+That made shout-out messages behave like small round buttons after pressing 👋.
 
-- Save button in the chat header
-- Save this group button on the QR/member invite page
-- iPhone-specific instructions
-- Android-specific instructions
-- Copy group link button
-- Reminder to save the group page, not the public homepage
+v12 separates the button styling from the message styling.
 
-## Correct member workflow
+## Upload
 
-1. Member scans the group QR/member invite.
-2. Member chooses nickname and joins.
-3. In the chat header, member taps Save.
-4. The app shows the correct steps.
-5. Member uses browser Share/Add to Home Screen.
-6. That home-screen shortcut should open the group link again.
+Upload everything to GitHub repo root and commit changes.
 
 ## Links
 
@@ -34,10 +24,3 @@ https://nonumberchat.github.io/No-number-chat/?admin=1
 
 PIN:
 0000
-
-Apply:
-https://nonumberchat.github.io/No-number-chat/?apply=1
-
-## Upload
-
-Upload all files to GitHub repo root and commit changes.

@@ -1,7 +1,7 @@
 {
   "name": "NoNumber Chat",
   "short_name": "NoNumber",
-  "description": "Private pilot no-phone-number group chat with in-app Save to Home Screen help.",
+  "description": "Private pilot no-phone-number group chat with wave button layout fix.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#efeae2",

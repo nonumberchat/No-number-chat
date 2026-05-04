@@ -1,15 +1,8 @@
-NoNumber Chat v10 Quick Start
+NoNumber Chat v12 Quick Start
 
 Upload all files to GitHub repo root and commit changes.
 
-Test save-to-home-screen:
-1. Delete old home-screen icon.
-2. Open group invite/QR link.
-3. Join with nickname.
-4. Tap Save in the chat header.
-5. Follow the phone steps.
-6. Reopen from new home icon.
-
-Important:
-The app cannot press Add to Home Screen automatically. Phones do not allow that.
-The app can only show the correct button/instructions and keep/copy the group link.
+Test:
+1. Open a group chat.
+2. Press the 👋 wave button.
+3. The shout-out message should appear as a normal yellow chat bubble, not squash the layout.

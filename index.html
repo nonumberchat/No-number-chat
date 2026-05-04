@@ -544,7 +544,7 @@ function render(){
 function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
   app.innerHTML = `
-    ${bar("NoNumber Chat", "Private pilot v10 · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot v12 · no phone numbers")}
     <main class="screen">
       <section class="hero">
         <div class="kicker">Private pilot</div>
@@ -829,15 +829,18 @@ function chatScreen(){
 
 function paintChat(g){
   app.innerHTML = `
-    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", creator ? "creator" : manageToken ? "groupAdmin" : "public", `${canAdminGroup(g.id) ? `<button class="btn ghost inviteCurrent">QR</button>` : ""}<button class="btn ghost saveThisGroup">Save</button>`)}
+    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", creator ? "creator" : manageToken ? "groupAdmin" : "public", canAdminGroup(g.id) ? `<button class="btn ghost inviteCurrent">QR</button>` : "")}
     <main class="chat">
       <div class="chatNote">No phone numbers · keep it light · stay in the group</div>
+      <div class="chatSave">
+        <button class="btn soft full saveThisGroup">Save this group to Home Screen</button>
+      </div>
       ${g.status === "frozen" ? `<div class="notice danger" style="margin:10px">This group is frozen.</div>` : ""}
       <section class="messages" id="messages">
         ${messages.map(msg).join("") || `<div class="card small">No messages yet.</div>`}
       </section>
       <form class="composer sendForm">
-        <button class="shout shoutBtn" type="button">👋</button>
+        <button class="shoutControl shoutBtn" type="button" aria-label="Send anyone-about shout-out">👋</button>
         <textarea id="message" maxlength="500" placeholder="Message" ${g.status === "frozen" ? "disabled" : ""}></textarea>
         <button class="round" ${g.status === "frozen" ? "disabled" : ""}>➤</button>
       </form>
