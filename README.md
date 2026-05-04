@@ -1,35 +1,45 @@
-# NoNumber Chat - v8 Persistent Chat Resume
+# NoNumber Chat - v9 Group Home Screen Fix
 
-This version fixes the home-screen / QR join issue.
+This version fixes the phone home-screen issue more reliably.
 
-## Fixed in v8
+## What changed
 
-When someone scans a QR code, joins a group and chooses a nickname, the app now saves:
+The app no longer wipes the group invite URL after someone joins.
 
-- their nickname
-- their last joined group
-- their joined group list
+That means if a member opens a group invite link like:
 
-When they open the app later from the phone home screen or normal public link, it opens back into their last chat instead of dumping them on the public/sign-in page.
+https://nonumberchat.github.io/No-number-chat/?join=GROUP_ID&code=GROUP_CODE
 
-The public page also shows a fallback:
+then joins and adds that page to their phone home screen, the shortcut opens the same group again.
 
-Continue last chat
+## Important for testing
+
+Delete the old home-screen icon first.
+
+Then:
+
+1. Open the group/member invite link or scan the QR.
+2. Enter nickname and join.
+3. While still in that group/chat, add it to the phone home screen.
+4. Close it.
+5. Open the new home-screen icon.
+
+It should reopen that group instead of the public page.
 
 ## Links
 
-Public/member page:
+Public:
 https://nonumberchat.github.io/No-number-chat/
 
-Creator Admin:
+Admin:
 https://nonumberchat.github.io/No-number-chat/?admin=1
 
 PIN:
 0000
 
-Group Application:
+Group application:
 https://nonumberchat.github.io/No-number-chat/?apply=1
 
 ## Upload
 
-Upload everything in this folder to the GitHub repo root and commit changes.
+Upload all files to GitHub repo root and commit changes.

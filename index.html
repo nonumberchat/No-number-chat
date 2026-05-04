@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#075E54" />
   <title>NoNumber Chat</title>
-  <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="icon" href="assets/icon-192.png">
   <style>
@@ -545,7 +544,7 @@ function render(){
 function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
   app.innerHTML = `
-    ${bar("NoNumber Chat", "Private pilot v8 · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot v9 · no phone numbers")}
     <main class="screen">
       <section class="hero">
         <div class="kicker">Private pilot</div>
@@ -557,6 +556,7 @@ function publicHome(){
         <h2>Join a group</h2>
         <p class="small">Ask your group admin for their QR code or invite link. Each group has its own separate room.</p>
         <div class="notice warn">Skipton and Keighley groups stay separate. One QR only joins one group.</div>
+        <div class="notice">For phone home-screen use, open your group invite first, join the chat, then add that page to your home screen.</div>
       </section>
 
       ${currentGroupId && nickname ? `
@@ -624,6 +624,18 @@ async function joinScreen(){
     app.innerHTML = bar(g.name, "Group frozen") + `<main class="screen"><div class="notice danger">This group is currently frozen by Creator Admin.</div></main>`;
     return;
   }
+
+  // If this exact group invite is opened again and the user already has a nickname,
+  // go straight back into the chat. This fixes phone home-screen shortcuts.
+  if (nickname && (localStorage.getItem("nn_group") === joinGroupId || currentGroupId === joinGroupId)) {
+    currentGroupId = joinGroupId;
+    localStorage.setItem("nn_group", currentGroupId);
+    rememberJoinedGroup(currentGroupId);
+    route = "chat";
+    render();
+    return;
+  }
+
   app.innerHTML = `
     ${bar(g.name, "Join by nickname only")}
     <main class="screen">
@@ -980,7 +992,7 @@ document.addEventListener("click", async e => {
     localStorage.setItem("nn_group", currentGroupId);
     rememberJoinedGroup(currentGroupId);
     localStorage.setItem("nn_last_joined_at", String(Date.now()));
-    history.replaceState(null, "", location.pathname);
+    // Keep the ?join=GROUP&code=... URL in place so a phone home-screen shortcut opens this same group again.
     route = "chat";
     render();
     return;

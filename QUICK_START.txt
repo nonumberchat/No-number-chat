@@ -1,9 +1,6 @@
-NoNumber Chat v8 Quick Start
+NoNumber Chat v9 Quick Start
 
 Upload all files to GitHub repo root and commit changes.
-
-Public:
-https://nonumberchat.github.io/No-number-chat/
 
 Admin:
 https://nonumberchat.github.io/No-number-chat/?admin=1
@@ -11,12 +8,11 @@ https://nonumberchat.github.io/No-number-chat/?admin=1
 PIN:
 0000
 
-What to test:
-1. Open admin link.
-2. Create a test group.
-3. Copy/show member QR.
-4. Open/scan member invite on phone.
-5. Enter nickname and join.
-6. Close app/browser.
-7. Reopen from home screen/public link.
-8. It should return to the last chat, not the public sign-in page.
+Home-screen test:
+1. Delete the old home-screen icon.
+2. Open a group QR/member invite on the phone.
+3. Join with nickname.
+4. Add that group page to home screen.
+5. Reopen from the new icon.
+
+Do not add the public homepage to home screen if you want it to reopen a specific group.
