@@ -544,7 +544,7 @@ function render(){
 function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
   app.innerHTML = `
-    ${bar("NoNumber Chat", "Private pilot v9 · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot v10 · no phone numbers")}
     <main class="screen">
       <section class="hero">
         <div class="kicker">Private pilot</div>
@@ -556,7 +556,7 @@ function publicHome(){
         <h2>Join a group</h2>
         <p class="small">Ask your group admin for their QR code or invite link. Each group has its own separate room.</p>
         <div class="notice warn">Skipton and Keighley groups stay separate. One QR only joins one group.</div>
-        <div class="notice">For phone home-screen use, open your group invite first, join the chat, then add that page to your home screen.</div>
+        <div class="notice">For phone home-screen use, open your group invite first, join the chat, then use the in-app “Save this group” button.</div>
       </section>
 
       ${currentGroupId && nickname ? `
@@ -660,6 +660,7 @@ async function joinScreen(){
         </div>
 
         <button class="btn primary full joinGroupBtn">Agree and join</button>
+        <p class="small" style="margin-bottom:0">After joining, use <strong>Save</strong> in the chat header to add this group to your home screen.</p>
       </section>
     </main>
   `;
@@ -828,7 +829,7 @@ function chatScreen(){
 
 function paintChat(g){
   app.innerHTML = `
-    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", creator ? "creator" : manageToken ? "groupAdmin" : "public", canAdminGroup(g.id) ? `<button class="btn ghost inviteCurrent">QR</button>` : "")}
+    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", creator ? "creator" : manageToken ? "groupAdmin" : "public", `${canAdminGroup(g.id) ? `<button class="btn ghost inviteCurrent">QR</button>` : ""}<button class="btn ghost saveThisGroup">Save</button>`)}
     <main class="chat">
       <div class="chatNote">No phone numbers · keep it light · stay in the group</div>
       ${g.status === "frozen" ? `<div class="notice danger" style="margin:10px">This group is frozen.</div>` : ""}
@@ -867,6 +868,7 @@ function inviteScreen(){
         <div class="qrbox"><img src="${qr}" alt="QR invite" /></div>
         <div class="linkbox" id="inviteLink">${escapeHtml(link)}</div>
         <button class="btn primary full copyInvite" style="margin-top:10px">Copy member invite</button>
+        <button class="btn soft full saveThisGroup" style="margin-top:9px">Save this group to Home Screen</button>
       </section>
 
       <section class="notice warn">
@@ -1025,6 +1027,11 @@ document.addEventListener("click", async e => {
     return;
   }
 
+  if (e.target.closest(".saveThisGroup")) {
+    showInstallHelp();
+    return;
+  }
+
   const copy = e.target.closest(".copyInvite");
   if (copy) {
     await navigator.clipboard.writeText(document.getElementById("inviteLink").textContent).catch(()=>{});
@@ -1058,6 +1065,69 @@ function rememberJoinedGroup(groupId){
   } catch {
     localStorage.setItem("nn_joined_groups", JSON.stringify([groupId]));
   }
+}
+
+function getCurrentGroupLink(){
+  const g = currentGroup();
+  if (g) return makeJoinLink(g);
+  if (joinGroupId && joinCode) {
+    const u = new URL(location.href);
+    u.search = "";
+    u.searchParams.set("join", joinGroupId);
+    u.searchParams.set("code", joinCode);
+    return u.toString();
+  }
+  return location.href;
+}
+
+function showInstallHelp(){
+  const g = currentGroup();
+  const groupName = g ? g.name : "this group";
+  const link = getCurrentGroupLink();
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
+
+  modal(`
+    <h2>Save this group</h2>
+    <p class="small">Use this from inside <strong>${escapeHtml(groupName)}</strong> so the home-screen icon opens this group, not the public homepage.</p>
+    <div class="installBox">
+      <strong>Group link</strong>
+      <div class="linkbox" id="installGroupLink">${escapeHtml(link)}</div>
+      <button class="btn soft full copyInstallLink" style="margin-top:9px">Copy group link</button>
+    </div>
+    ${isIOS ? `
+      <div class="notice warn">
+        <strong>iPhone steps</strong>
+        <ol class="installSteps">
+          <li>Tap the Share button in Safari.</li>
+          <li>Tap <strong>Add to Home Screen</strong>.</li>
+          <li>Name it after the group.</li>
+          <li>Tap <strong>Add</strong>.</li>
+        </ol>
+      </div>
+    ` : isAndroid ? `
+      <div class="notice warn">
+        <strong>Android steps</strong>
+        <ol class="installSteps">
+          <li>Tap the three dots in Chrome.</li>
+          <li>Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>.</li>
+          <li>Name it after the group.</li>
+          <li>Tap <strong>Add</strong>.</li>
+        </ol>
+      </div>
+    ` : `
+      <div class="notice warn">
+        Use your browser menu and choose <strong>Add to Home Screen</strong>, <strong>Install</strong>, or <strong>Create shortcut</strong>.
+      </div>
+    `}
+    <button class="btn ghost full closeModal" style="margin-top:8px">Done</button>
+  `);
+
+  document.querySelector(".copyInstallLink").onclick = async () => {
+    await navigator.clipboard.writeText(link).catch(()=>{});
+    toast("Group link copied");
+  };
+  document.querySelector(".closeModal").onclick = closeModal;
 }
 
 function currentGroup(){

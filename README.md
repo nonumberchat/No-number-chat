@@ -1,30 +1,28 @@
-# NoNumber Chat - v9 Group Home Screen Fix
+# NoNumber Chat - v10 Save to Home Screen Helper
 
-This version fixes the phone home-screen issue more reliably.
+This version adds an in-app "Save this group" option.
 
-## What changed
+## Why
 
-The app no longer wipes the group invite URL after someone joins.
+Phones, especially iPhones, do not let a web app force Add to Home Screen automatically.
 
-That means if a member opens a group invite link like:
+So this version adds:
 
-https://nonumberchat.github.io/No-number-chat/?join=GROUP_ID&code=GROUP_CODE
+- Save button in the chat header
+- Save this group button on the QR/member invite page
+- iPhone-specific instructions
+- Android-specific instructions
+- Copy group link button
+- Reminder to save the group page, not the public homepage
 
-then joins and adds that page to their phone home screen, the shortcut opens the same group again.
+## Correct member workflow
 
-## Important for testing
-
-Delete the old home-screen icon first.
-
-Then:
-
-1. Open the group/member invite link or scan the QR.
-2. Enter nickname and join.
-3. While still in that group/chat, add it to the phone home screen.
-4. Close it.
-5. Open the new home-screen icon.
-
-It should reopen that group instead of the public page.
+1. Member scans the group QR/member invite.
+2. Member chooses nickname and joins.
+3. In the chat header, member taps Save.
+4. The app shows the correct steps.
+5. Member uses browser Share/Add to Home Screen.
+6. That home-screen shortcut should open the group link again.
 
 ## Links
 
@@ -37,7 +35,7 @@ https://nonumberchat.github.io/No-number-chat/?admin=1
 PIN:
 0000
 
-Group application:
+Apply:
 https://nonumberchat.github.io/No-number-chat/?apply=1
 
 ## Upload
