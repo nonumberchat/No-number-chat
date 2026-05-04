@@ -1,7 +1,7 @@
 {
   "name": "NoNumber Chat",
   "short_name": "NoNumber",
-  "description": "Polished private pilot no-phone-number group chat with group applications, group admins and QR invite joining.",
+  "description": "Polished private pilot no-phone-number group chat with persistent chat resume.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#efeae2",

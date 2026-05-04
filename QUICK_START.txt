@@ -1,29 +1,22 @@
-NoNumber Chat v7 Polished Pilot Quick Start
+NoNumber Chat v8 Quick Start
 
-1. Extract this ZIP.
-2. Open GitHub repo:
-   nonumberchat / No-number-chat
-
-3. Upload all files from inside this folder to the repo root.
-4. Commit changes.
+Upload all files to GitHub repo root and commit changes.
 
 Public:
 https://nonumberchat.github.io/No-number-chat/
 
-Creator Admin:
+Admin:
 https://nonumberchat.github.io/No-number-chat/?admin=1
 
 PIN:
 0000
 
-Apply for group:
-https://nonumberchat.github.io/No-number-chat/?apply=1
-
-Workflow:
-1. Person applies for their own group.
-2. Creator Admin approves application.
-3. App creates separate group.
-4. Creator Admin copies Group Admin link and sends it to group admin.
-5. Group Admin opens own dashboard.
-6. Group Admin shows Member QR.
-7. Members scan QR and join that specific group.
+What to test:
+1. Open admin link.
+2. Create a test group.
+3. Copy/show member QR.
+4. Open/scan member invite on phone.
+5. Enter nickname and join.
+6. Close app/browser.
+7. Reopen from home screen/public link.
+8. It should return to the last chat, not the public sign-in page.

@@ -1,25 +1,24 @@
-# NoNumber Chat - v7 Polished Pilot
+# NoNumber Chat - v8 Persistent Chat Resume
 
-This is the polished private-pilot version.
+This version fixes the home-screen / QR join issue.
 
-## What it does
+## Fixed in v8
 
-- Public page hides admin controls
-- Group application/sign-up page
-- Creator Admin dashboard
-- Group Admin dashboard for each group
-- Each approved group has its own admin link
-- Each approved group has its own member QR code
-- Members join with first name/nickname only
-- No phone number fields
-- Creator Admin can freeze/delete any group
-- Creator Admin can delete messages in any group
-- Group Admin can control their own group only
-- Polished WhatsApp-inspired UI
+When someone scans a QR code, joins a group and chooses a nickname, the app now saves:
+
+- their nickname
+- their last joined group
+- their joined group list
+
+When they open the app later from the phone home screen or normal public link, it opens back into their last chat instead of dumping them on the public/sign-in page.
+
+The public page also shows a fallback:
+
+Continue last chat
 
 ## Links
 
-Public page:
+Public/member page:
 https://nonumberchat.github.io/No-number-chat/
 
 Creator Admin:
@@ -31,18 +30,6 @@ PIN:
 Group Application:
 https://nonumberchat.github.io/No-number-chat/?apply=1
 
-Group Admin:
-Creator Admin copies each Group Admin link from the dashboard.
-
-Member QR:
-Creator Admin or Group Admin opens Member QR for that specific group.
-
 ## Upload
 
-Upload all files to GitHub repo root and commit changes.
-
-## Firebase
-
-Use firestore-rules-private-pilot.txt for the current pilot.
-
-These rules still need tightening before public launch.
+Upload everything in this folder to the GitHub repo root and commit changes.

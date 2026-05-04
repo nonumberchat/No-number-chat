@@ -451,7 +451,6 @@ const params = new URLSearchParams(location.search);
 
 let firebaseApp, auth, db, uid;
 let app = document.getElementById("app");
-let route = params.get("admin") === "1" ? "creatorLogin" : params.has("manage") ? "groupAdmin" : params.has("join") ? "join" : params.has("apply") ? "apply" : "public";
 let manageToken = params.get("manage") || "";
 let groups = [];
 let applications = [];
@@ -459,11 +458,25 @@ let currentGroupId = localStorage.getItem("nn_group") || "";
 let joinGroupId = params.get("join") || "";
 let joinCode = params.get("code") || "";
 let nickname = localStorage.getItem("nn_nick") || "";
+let route = getInitialRoute();
 let creator = localStorage.getItem("nn_creator") === "yes";
 let unsubGroups = null;
 let unsubApps = null;
 let unsubMessages = null;
 let messages = [];
+
+function getInitialRoute(){
+  if (params.get("admin") === "1") return "creatorLogin";
+  if (params.has("manage")) return "groupAdmin";
+  if (params.has("join")) return "join";
+  if (params.has("apply")) return "apply";
+
+  // If someone has already joined a group and saved a nickname,
+  // opening the home-screen app should take them back into their last chat.
+  if (localStorage.getItem("nn_group") && localStorage.getItem("nn_nick")) return "chat";
+
+  return "public";
+}
 
 boot();
 
@@ -492,7 +505,12 @@ function listenGroups(){
     query(collection(db, "groups"), orderBy("updatedAt", "desc"), limit(100)),
     snap => {
       groups = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      if (["creator","public","groupAdmin"].includes(route)) render();
+      if (route === "chat" && currentGroupId && !groups.some(g => g.id === currentGroupId)) {
+        localStorage.removeItem("nn_group");
+        currentGroupId = "";
+        route = "public";
+      }
+      if (["creator","public","groupAdmin","chat"].includes(route)) render();
     },
     err => {
       app.innerHTML = bar("Permission Error", "Groups") + `<main class="screen"><div class="notice danger">${escapeHtml(err.message)}</div></main>`;
@@ -527,7 +545,7 @@ function render(){
 function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
   app.innerHTML = `
-    ${bar("NoNumber Chat", "Private pilot v7 · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot v8 · no phone numbers")}
     <main class="screen">
       <section class="hero">
         <div class="kicker">Private pilot</div>
@@ -540,6 +558,14 @@ function publicHome(){
         <p class="small">Ask your group admin for their QR code or invite link. Each group has its own separate room.</p>
         <div class="notice warn">Skipton and Keighley groups stay separate. One QR only joins one group.</div>
       </section>
+
+      ${currentGroupId && nickname ? `
+      <section class="card">
+        <h2>Continue last chat</h2>
+        <p class="small">Signed in as <strong>${escapeHtml(nickname)}</strong>. Reopen the last group you joined.</p>
+        <button class="btn primary full continueLastChat">Continue to chat</button>
+      </section>
+      ` : ""}
 
       <section class="card">
         <h2>Want your own group?</h2>
@@ -842,6 +868,13 @@ document.addEventListener("click", async e => {
   const back = e.target.closest(".back");
   if (back) { route = back.dataset.route; render(); return; }
 
+  if (e.target.closest(".continueLastChat")) {
+    if (!currentGroupId || !nickname) return toast("No saved chat found");
+    route = "chat";
+    render();
+    return;
+  }
+
   if (e.target.closest(".applyLink")) { route = "apply"; render(); return; }
 
   if (e.target.closest(".submitApplication")) {
@@ -886,6 +919,7 @@ document.addEventListener("click", async e => {
   if (open) {
     currentGroupId = open.dataset.id;
     localStorage.setItem("nn_group", currentGroupId);
+    rememberJoinedGroup(currentGroupId);
     if (!nickname) return nickModal(() => { route = "chat"; render(); });
     route = "chat";
     render();
@@ -944,6 +978,8 @@ document.addEventListener("click", async e => {
     localStorage.setItem("nn_nick", nickname);
     currentGroupId = joinGroupId;
     localStorage.setItem("nn_group", currentGroupId);
+    rememberJoinedGroup(currentGroupId);
+    localStorage.setItem("nn_last_joined_at", String(Date.now()));
     history.replaceState(null, "", location.pathname);
     route = "chat";
     render();
@@ -1000,6 +1036,17 @@ document.addEventListener("submit", async e => {
     input.value = "";
   }
 });
+
+function rememberJoinedGroup(groupId){
+  try {
+    const raw = localStorage.getItem("nn_joined_groups") || "[]";
+    const arr = JSON.parse(raw).filter(id => id !== groupId);
+    arr.unshift(groupId);
+    localStorage.setItem("nn_joined_groups", JSON.stringify(arr.slice(0, 10)));
+  } catch {
+    localStorage.setItem("nn_joined_groups", JSON.stringify([groupId]));
+  }
+}
 
 function currentGroup(){
   return groups.find(x => x.id === currentGroupId);
