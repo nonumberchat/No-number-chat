@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#075E54" />
-  <title>NoNumber Chat Rescue</title>
+  <title>NoNumber Chat</title>
   <style>
     :root {
       --green:#075E54; --green2:#128C7E; --light:#25D366; --bg:#efeae2;
       --paper:#fff; --text:#111b21; --muted:#667781; --line:#e9edef;
-      --out:#d9fdd3; --danger:#fdebea; --dangerText:#a30d05;
+      --out:#d9fdd3; --danger:#fdebea; --dangerText:#a30d05; --warn:#fff8d7;
     }
     * { box-sizing:border-box; }
     html,body { margin:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; background:#d8dbd5; color:var(--text); }
@@ -17,7 +17,7 @@
     button,input,textarea { font:inherit; }
     button { cursor:pointer; }
     #app { max-width:540px; min-height:100svh; margin:0 auto; background:var(--bg); box-shadow:0 0 0 1px rgba(0,0,0,.08),0 10px 28px rgba(0,0,0,.13); overflow:hidden; }
-    .bar { height:66px; background:var(--green); color:white; display:flex; align-items:center; gap:11px; padding:10px 12px; }
+    .bar { min-height:66px; background:var(--green); color:white; display:flex; align-items:center; gap:11px; padding:10px 12px; }
     .avatar { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--light),#d8ffe5); color:#063b34; display:grid; place-items:center; font-weight:950; flex:0 0 auto; }
     .titleWrap { min-width:0; flex:1; }
     .title { font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -30,7 +30,7 @@
     .small { color:var(--muted); font-size:.88rem; line-height:1.45; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
     .row { display:flex; gap:9px; align-items:center; flex-wrap:wrap; }
-    .btn { border:0; border-radius:999px; padding:11px 14px; font-weight:900; min-height:43px; }
+    .btn { border:0; border-radius:999px; padding:11px 14px; font-weight:900; min-height:43px; text-align:center; }
     .primary { background:var(--green2); color:white; }
     .ghost { background:#f0f2f5; color:var(--text); }
     .soft { background:#e7fce9; color:var(--green); }
@@ -44,18 +44,19 @@
     .itemTitle { font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .itemSub { color:var(--muted); font-size:.84rem; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .notice { border-radius:15px; background:#e7fce9; color:var(--green); padding:11px 12px; margin:10px 0; font-size:.88rem; line-height:1.45; }
+    .notice.warn { background:var(--warn); color:#6a5200; }
     .notice.danger { background:var(--danger); color:var(--dangerText); }
     .chat { display:flex; flex-direction:column; height:calc(100svh - 66px); background:var(--bg); }
     .chatNote { margin:8px 10px 0; background:#fff8d7; color:#6a5200; border-radius:12px; padding:7px 10px; text-align:center; font-size:.78rem; }
     .messages { flex:1; overflow:auto; padding:10px; display:flex; flex-direction:column; gap:7px; }
-    .msg { display:flex; }
+    .msg { display:flex; width:100%; align-items:flex-end; gap:7px; }
     .msg.mine { justify-content:flex-end; }
-    .bubble { max-width:82%; background:white; border-radius:10px; padding:7px 9px 5px; box-shadow:0 1px 1px rgba(0,0,0,.13); }
+    .bubble { max-width:82%; min-width:44px; background:white; border-radius:10px; padding:7px 9px 5px; box-shadow:0 1px 1px rgba(0,0,0,.13); }
     .mine .bubble { background:var(--out); }
     .system .bubble { margin:4px auto; max-width:94%; background:#e2f3fb; color:#53656f; text-align:center; box-shadow:none; font-size:.8rem; }
     .shout .bubble { background:#fff6d9; }
     .msgName { color:var(--green2); font-weight:950; font-size:.77rem; margin-bottom:2px; }
-    .msgText { white-space:pre-wrap; word-break:break-word; line-height:1.35; }
+    .msgText { white-space:pre-wrap; overflow-wrap:break-word; word-break:normal; line-height:1.35; }
     .msgTime { text-align:right; color:var(--muted); font-size:.68rem; margin-top:2px; }
     .composer { background:#f0f2f5; padding:8px; display:flex; gap:7px; align-items:flex-end; }
     .composer textarea { border:0; border-radius:22px; min-height:44px; max-height:110px; padding:12px 14px; }
@@ -68,6 +69,7 @@
     .qrbox { background:white; border-radius:22px; padding:14px; display:grid; place-items:center; margin:12px auto; max-width:275px; }
     .qrbox img { width:235px; height:235px; }
     .linkbox { background:#f0f2f5; border-radius:13px; padding:10px; color:#53656f; font-size:.82rem; word-break:break-all; }
+    .rules { padding-left:18px; color:var(--muted); line-height:1.5; }
     @media(max-width:540px) { #app { max-width:100%; box-shadow:none; } body:before { display:none; } }
   </style>
 </head>
@@ -75,7 +77,6 @@
 <div id="app"></div>
 
 <script>
-  // Rescue build: remove any previous broken cache/service worker.
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(()=>{});
   }
@@ -88,7 +89,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFirestore, collection, doc, addDoc, updateDoc,
+  getFirestore, collection, doc, addDoc, getDoc, updateDoc,
   onSnapshot, query, orderBy, limit, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -101,12 +102,15 @@ const firebaseConfig = {
   "appId": "1:599471724020:web:9a028dafe0a96eaf3955a1"
 };
 const CREATOR_PIN = "0000";
+const params = new URLSearchParams(location.search);
 
 let firebaseApp, auth, db, uid;
 let app = document.getElementById("app");
-let route = "home";
+let route = params.get("admin") === "1" ? "creatorLogin" : params.has("join") ? "join" : "public";
 let groups = [];
 let currentGroupId = localStorage.getItem("nn_group") || "";
+let joinGroupId = params.get("join") || "";
+let joinCode = params.get("code") || "";
 let nickname = localStorage.getItem("nn_nick") || "";
 let creator = localStorage.getItem("nn_creator") === "yes";
 let unsubGroups = null;
@@ -139,7 +143,7 @@ function listenGroups(){
     query(collection(db, "groups"), orderBy("updatedAt", "desc"), limit(50)),
     snap => {
       groups = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      if (route === "home" || route === "creator") render();
+      if (route === "creator" || route === "public") render();
     },
     err => {
       app.innerHTML = bar("Permission Error", "Groups") + `<main class="screen"><div class="notice danger">${escapeHtml(err.message)}</div></main>`;
@@ -153,35 +157,66 @@ function render(){
   if (route === "creator") return creatorDashboard();
   if (route === "chat") return chatScreen();
   if (route === "invite") return inviteScreen();
-  return home();
+  if (route === "join") return joinScreen();
+  return publicHome();
 }
 
-function home(){
+function publicHome(){
   if (unsubMessages) { unsubMessages(); unsubMessages = null; }
-  const groupHtml = groups.map(g => `
-    <button class="item openGroup" data-id="${escapeHtml(g.id)}">
-      <div class="avatar">${initials(g.name)}</div>
-      <div class="itemMain"><div class="itemTitle">${escapeHtml(g.name)}</div><div class="itemSub">${escapeHtml(g.description || "No-number group chat")}</div></div>
-    </button>
-  `).join("") || `<div class="card"><h2>No groups yet</h2><p class="small">Open Creator Admin and create your first group.</p></div>`;
-
   app.innerHTML = `
-    ${bar("NoNumber Chat", "RESCUE live build · no phone numbers")}
+    ${bar("NoNumber Chat", "Private pilot · no phone numbers")}
     <main class="screen">
       <section class="hero">
-        <div class="kicker">Rescue live build</div>
-        <h1>Scan. Nickname. Chat.</h1>
-        <p>A real-time group chat tool where people join by QR code without sharing phone numbers.</p>
-        <div class="notice">If you can read this, the one-file rescue build is loaded.</div>
+        <div class="kicker">Private pilot</div>
+        <h1>Join by QR invite.</h1>
+        <p>This is a phone-number-free group chat pilot. Members join from a group QR code or invite link.</p>
+        <div class="notice warn">Ask the group admin for a QR code or invite link.</div>
       </section>
-      <section>${groupHtml}</section>
       <section class="card">
-        <div class="grid">
-          <button class="btn primary goto" data-route="creatorLogin">Creator Admin</button>
-          <button class="btn ghost toastBtn" data-msg="Good-cause form comes after the live chat test.">Good Cause Apply</button>
-          <button class="btn soft toastBtn" data-msg="Group admin flow comes after the live chat test.">Group Admin</button>
-          <button class="btn ghost nickBtn">Set nickname</button>
+        <h2>How it works</h2>
+        <ol class="rules">
+          <li>Scan the group QR code.</li>
+          <li>Choose a first name or nickname.</li>
+          <li>Accept the rules.</li>
+          <li>Chat without sharing phone numbers.</li>
+        </ol>
+      </section>
+    </main>
+  `;
+}
+
+async function joinScreen(){
+  const snap = await getDoc(doc(db, "groups", joinGroupId));
+  if (!snap.exists()) {
+    app.innerHTML = bar("Invite not found", "NoNumber Chat") + `<main class="screen"><div class="notice danger">This group invite does not exist.</div></main>`;
+    return;
+  }
+  const g = { id:snap.id, ...snap.data() };
+  if (g.inviteCode !== joinCode) {
+    app.innerHTML = bar("Invite expired", "NoNumber Chat") + `<main class="screen"><div class="notice danger">This QR code has expired or been reset.</div></main>`;
+    return;
+  }
+  app.innerHTML = `
+    ${bar(g.name, "Join by nickname only")}
+    <main class="screen">
+      <section class="hero">
+        <div class="kicker">Group invite</div>
+        <h1>No number needed.</h1>
+        <p>Choose a first name or nickname, accept the rules, and join the chat.</p>
+      </section>
+      <section class="card">
+        <label>First name or nickname</label>
+        <input id="joinNick" maxlength="32" value="${escapeHtml(nickname)}" placeholder="Craig">
+        <div class="notice">
+          <strong>Group rules</strong>
+          <ul class="rules">
+            <li>No phone numbers in the group.</li>
+            <li>Keep chat friendly, light and in the group.</li>
+            <li>No pressure to private message.</li>
+            <li>Admins can remove messages or freeze the group.</li>
+          </ul>
         </div>
+        <button class="btn primary full joinGroupBtn">I agree and join</button>
       </section>
     </main>
   `;
@@ -189,7 +224,7 @@ function home(){
 
 function creatorLogin(){
   app.innerHTML = `
-    ${bar("Creator Admin", "Master control", "home")}
+    ${bar("Creator Admin", "Private admin link", "public")}
     <main class="screen">
       <section class="card">
         <h2>Creator sign in</h2>
@@ -217,7 +252,7 @@ function creatorDashboard(){
   `).join("") || `<div class="card small">No groups yet. Create one now.</div>`;
 
   app.innerHTML = `
-    ${bar("Creator Dashboard", "Create groups · invite · freeze", "home")}
+    ${bar("Creator Dashboard", "Create groups · invite · freeze", "public")}
     <main class="screen">
       <section class="card">
         <div class="grid">
@@ -232,7 +267,7 @@ function creatorDashboard(){
 
 function chatScreen(){
   const g = groups.find(x => x.id === currentGroupId);
-  if (!g) { route = "home"; return home(); }
+  if (!g) { route = "public"; return publicHome(); }
   if (unsubMessages) unsubMessages();
   unsubMessages = onSnapshot(
     query(collection(db, "groups", currentGroupId, "messages"), orderBy("createdAt", "asc"), limit(150)),
@@ -241,7 +276,7 @@ function chatScreen(){
       paintChat(g);
     },
     err => {
-      app.innerHTML = bar("Permission Error", "Messages", "home") + `<main class="screen"><div class="notice danger">${escapeHtml(err.message)}</div></main>`;
+      app.innerHTML = bar("Permission Error", "Messages", "public") + `<main class="screen"><div class="notice danger">${escapeHtml(err.message)}</div></main>`;
     }
   );
   paintChat(g);
@@ -249,7 +284,7 @@ function chatScreen(){
 
 function paintChat(g){
   app.innerHTML = `
-    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", "home", `<button class="btn ghost inviteCurrent">QR</button>`)}
+    ${bar(g.name, g.status === "frozen" ? "Frozen" : "Live chat", "public", creator ? `<button class="btn ghost inviteCurrent">QR</button>` : "")}
     <main class="chat">
       <div class="chatNote">No phone numbers · keep it light · stay in the group</div>
       ${g.status === "frozen" ? `<div class="notice danger" style="margin:10px">This group is frozen.</div>` : ""}
@@ -292,9 +327,6 @@ document.addEventListener("click", async e => {
   const back = e.target.closest(".back");
   if (back) { route = back.dataset.route; render(); return; }
 
-  const goto = e.target.closest(".goto");
-  if (goto) { route = goto.dataset.route; render(); return; }
-
   if (e.target.closest(".openCreator")) {
     const pin = document.getElementById("pin").value.trim();
     if (pin !== CREATOR_PIN) return toast("Wrong PIN");
@@ -308,13 +340,12 @@ document.addEventListener("click", async e => {
   if (e.target.closest(".logoutCreator")) {
     creator = false;
     localStorage.removeItem("nn_creator");
-    route = "home";
+    route = "public";
     render();
     return;
   }
 
   if (e.target.closest(".createGroup")) { groupModal(); return; }
-  if (e.target.closest(".nickBtn")) { nickModal(); return; }
 
   const open = e.target.closest(".openGroup");
   if (open) {
@@ -351,15 +382,27 @@ document.addEventListener("click", async e => {
     return;
   }
 
+  const join = e.target.closest(".joinGroupBtn");
+  if (join) {
+    const n = document.getElementById("joinNick").value.trim();
+    if (!n) return toast("Add a nickname");
+    if (hasPhone(n)) return toast("Use a nickname, not a number");
+    nickname = n;
+    localStorage.setItem("nn_nick", nickname);
+    currentGroupId = joinGroupId;
+    localStorage.setItem("nn_group", currentGroupId);
+    history.replaceState(null, "", location.pathname);
+    route = "chat";
+    render();
+    return;
+  }
+
   const copy = e.target.closest(".copyInvite");
   if (copy) {
     await navigator.clipboard.writeText(document.getElementById("inviteLink").textContent).catch(()=>{});
     toast("Invite copied");
     return;
   }
-
-  const toastButton = e.target.closest(".toastBtn");
-  if (toastButton) toast(toastButton.dataset.msg || "Done");
 });
 
 document.addEventListener("submit", async e => {

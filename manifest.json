@@ -1,7 +1,7 @@
 {
-  "name": "NoNumber Live Chat",
+  "name": "NoNumber Chat",
   "short_name": "NoNumber",
-  "description": "Live no-phone-number group chat with QR joining.",
+  "description": "Private pilot no-phone-number group chat with QR invite joining.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#efeae2",

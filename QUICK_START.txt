@@ -1,0 +1,36 @@
+NoNumber Chat Full Private Pilot Setup
+
+1. Extract this ZIP.
+2. Open your GitHub repo:
+   nonumberchat / No-number-chat
+
+3. Upload everything from inside this folder to the repo root:
+   - index.html
+   - manifest.json
+   - sw.js
+   - assets/
+   - README.md
+   - QUICK_START.txt
+   - firestore-rules-private-pilot.txt
+
+4. Commit changes.
+
+5. In GitHub Pages, your public link is:
+   https://nonumberchat.github.io/No-number-chat/
+
+6. Creator Admin link is:
+   https://nonumberchat.github.io/No-number-chat/?admin=1
+
+7. Creator Admin PIN:
+   0000
+
+8. In Firebase, go to:
+   Firestore Database → Rules
+
+9. Paste the rules from:
+   firestore-rules-private-pilot.txt
+
+10. Publish.
+
+Note:
+This build intentionally does not use a service worker so old cached versions do not keep haunting the app.

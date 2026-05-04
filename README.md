@@ -1,21 +1,79 @@
-# NoNumber Live Chat Hotfix
+# NoNumber Chat - Private Pilot
 
-This is a simplified hotfix build.
+A private pilot for a phone-number-free group chat tool.
 
-What changed:
-- Service worker removed
-- Old caches are cleared on load
-- Buttons use one global click handler
-- Creator Admin can create groups directly
-- Chat messages are live through Firebase Firestore
-- Firebase config is already filled for the NoNumber Chat project
+## Current working structure
 
-Upload all files to the GitHub repo root and commit changes.
+### Public/member link
 
-After upload:
-1. Open https://craigandersonsmaf-prog.github.io/nonumber-chat/?v=hotfix2
-2. Click Creator Admin
-3. PIN: 0000
-4. Create a group
-5. Send a message
-6. Open the same link on another device and check the message appears
+https://nonumberchat.github.io/No-number-chat/
+
+This page does not show the admin buttons. It tells people this is a private pilot and asks them to join by QR/invite link.
+
+### Creator Admin link
+
+https://nonumberchat.github.io/No-number-chat/?admin=1
+
+Creator Admin PIN for this pilot:
+
+0000
+
+### Member join links
+
+Creator Admin creates a group and uses the QR button. Members scan the QR code or open the invite link.
+
+They then:
+
+1. Choose a first name or nickname.
+2. Agree to the rules.
+3. Join the group chat.
+4. Chat without sharing phone numbers.
+
+## What is included
+
+- index.html
+- manifest.json
+- sw.js
+- assets/icon-192.png
+- assets/icon-512.png
+- firestore-rules-private-pilot.txt
+- README.md
+- QUICK_START.txt
+
+## Important Firebase note
+
+The included Firestore rules are still pilot rules. They are better than the fully open test rules because they require anonymous Firebase sign-in:
+
+allow read, write: if request.auth != null;
+
+Before any public launch, Creator Admin and Group Admin permissions should be properly locked down server-side.
+
+## GitHub upload
+
+Upload all these files to the root of the GitHub repo:
+
+- index.html
+- manifest.json
+- sw.js
+- assets folder
+- README.md
+- QUICK_START.txt
+- firestore-rules-private-pilot.txt
+
+Then commit changes.
+
+## GitHub Pages
+
+Settings → Pages → Deploy from branch → main → /root
+
+## Firebase rules
+
+Open Firebase:
+
+Firestore Database → Rules
+
+Paste the contents of:
+
+firestore-rules-private-pilot.txt
+
+Then Publish.
